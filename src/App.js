@@ -1,26 +1,32 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { Home } from './Home';
-import { About } from './About';
-import { Contact } from './Contact';
-import { NoMatch } from './NoMatch';
-import { Layout } from './components/Layout';
+import './App.scss';
+import Dropdown from './Dropdown';
+
+const items = [
+  {
+    id: 1,
+    value: 'tweet 1',
+  },
+  {
+    id: 2,
+    value: 'tweet 2',
+  },
+  {
+    id: 3,
+    value: 'tweet 3',
+  },
+];
 
 function App() {
   return (
-   <React.Fragment>
-    <Layout>
-        <Router>
-          <switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/about" component={About} />
-            <Route exact path="/contact" component={Contact} />
-            <Route component={NoMatch} />
-          </switch>
-        </Router>
-     </Layout>
-   </React.Fragment>
+    <div className="container">
+      <h1 style={{ textAlign: 'center' }}>
+        Twitter search
+      </h1>
+      <Dropdown title="Search Tweet" items={items} multiSelect />
+    </div>
   );
 }
+
 
 export default App;
