@@ -60,45 +60,27 @@
 
 <h2>Search/Filter Dropdown</h2>
 <p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
-
-<div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-    <a href="#about">About</a>
-    <a href="#base">Base</a>
-    <a href="#blog">Blog</a>
-    <a href="#contact">Contact</a>
-    <a href="#custom">Custom</a>
-    <a href="#support">Support</a>
-    <a href="#tools">Tools</a>
-  </div>
+<p>hHLELEO</p>
 </div>
+  <img src="" id="rainbow" />
+  <script>
 
-<script>
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
+  //cosnt proxyurl = "https://cors-anywhere.herokuapp.com/";
+  const url = 'http://192.168.1.211:8080/api/search?requestedQuery=hello_sir';
+  fetch(url, {mode: 'no-cors'})
+    .then(response => {
+      console.log("here");
+      console.log(response.json()); 
+      console.log(response); 
+    })
+    .catch(error => {  
+      console.log('Request failed', error)
+    });
 
-function filterFunction() {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
-  }
-}
-</script>
+  //  import React from "React";
+    //await fetch("http://localhost:8080/api/search?requestedQuery=hello_sir", {mode: 'no-cors'})
+
+  </script>
 
 </body>
 </html>
-
