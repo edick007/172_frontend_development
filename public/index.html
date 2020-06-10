@@ -67,15 +67,13 @@
 
   //cosnt proxyurl = "https://cors-anywhere.herokuapp.com/";
   const url = 'http://192.168.1.211:8080/api/search?requestedQuery=hello_sir';
-  fetch(url, {mode: 'no-cors'})
-    .then(response => {
-      console.log("here");
-      console.log(response.json()); 
-      console.log(response); 
+  fetch(url)
+    .then(response => response.json())
+    .then((out)=>{
+      console.log(out);
     })
-    .catch(error => {  
-      console.log('Request failed', error)
-    });
+      
+      
 
   //  import React from "React";
     //await fetch("http://localhost:8080/api/search?requestedQuery=hello_sir", {mode: 'no-cors'})
@@ -84,3 +82,5 @@
 
 </body>
 </html>
+
+
