@@ -1,49 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link
-        rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-        crossorigin="anonymous"
-    />
-    <!--  
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.dropbtn {
+  background-color: #504caf;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #504caf;
+}
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: 100px;
+  display: inline-block;
+  
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 2000px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.groove {border-style: groove;}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+
+
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center">Twitter Search/Filter</h2>
+<p style="text-align:center">Click on the button to open the search menu, and use the input field to search for a tweet.</p>
+
+<div class="dropdown" class="groove">
+  <button onclick="myFunction()" class="dropbtn" >Get Searching!</button>
+  <div id="myDropdown" class="dropdown-content" class="groove">
+    <input type="text" placeholder="Search.." class="groove" id="myInput" onkeyup="filterFunction()">
+    <button onclick="nothing()">Search</button>
+    <p id="obj0"></p>
+    <p id="obj1"></p>
+    <p id="obj2"></p>
+    <p id="obj3"></p>
+    <p id="obj4"></p>
+    <p id="obj5"></p>
+    <p id="obj6"></p>
+    <p id="obj7"></p>
+    <p id="obj8"></p>
+    <p id="obj9"></p>
+    
+  </div>
+</div>
+
+
+  <script>
+  function nothing(){
+    //do nothing
+  }
+  function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function filterFunction() {
+      var input, filter, a; //ul, li, a, i;
+      input = document.getElementById("myInput");
+      
+      filter = input.value.toUpperCase();
+      console.log(filter)
+      div = document.getElementById("myDropdown");
+      a = div.getElementsByTagName("a");
+      const url = 'http://192.168.1.211:8080/api/search?requestedQuery=' + filter;
+      fetch(url)
+        .then(response => response.json())
+        .then((data)=>{
+        
+          //console.log(data);
+          //console.log(data[0].name);
+      //var out = [];
+      var next = 1;
+      var order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+      /*
+       * Ranking fcn: Tweets are already ordered by time created in backend.
+       * Order tweets by their score in descending order.
+       */
+
+      function TwitterStringToDate(s) {
+        var b = s.split(/[: ]/g);
+        var m = {jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6,
+                aug:7, sep:8, oct:9, nov:10, dec:11};
+
+        return new Date(Date.UTC(b[7], m[b[1].toLowerCase()], b[2], b[3], b[4], b[5]));
+      }
+      
+      //var temp_order  = order;
+      var temp_data = data;
+      for(var j = 0; j < 10; j++){
+        for(var i = 0; i < 9-j; i++){
+          var temp_data_original;
+          //console.log("before");
+          if(temp_data[i].score <= temp_data[i+1].score){
+            //console.log("after");
+            if (TwitterStringToDate(temp_data[i].created_at) <TwitterStringToDate(temp_data[i+1].created_at)){
+              //console.log("SWAP");
+              
+              temp_data_original = temp_data[i]
+              temp_data[i] = temp_data[i+1]
+              temp_data[i+1] = temp_data_original
+              
+
+              //temp_order = order[i];
+              //order[i] = order[i+1];
+              //order[i+1] = temp_order;
+            }
+          }
+        }
+      }
+      
+      //console.log(order);
+      //console.log(temp_data);
+      console.log('filter: ' + filter)
+      if (filter == null){
+        for (var i = 0; i <= 9; i++) {
+          //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
+          document.getElementById("obj" + String(i)).innerHTML = "loading..";
+          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+        }
+      }
+      else{
+        for (var i = 0; i <= 9; i++) {
+          //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
+          document.getElementById("obj" + String(i)).innerHTML = "Score: " + data[i].score + ", Content: " + data[i].text;
+          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+        }
+      }
+      console.log('after')
+      console.log(data);
+      //console.log(order);
+
+    })
+    .catch((error) => {
+          //console.error('Error:', error);
+          for (var i = 0; i <= 9; i++) {
+          //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
+          document.getElementById("obj" + String(i)).innerHTML = "No result..";
+          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+        }
+
+    });
+      
+    }
+
+  </script>
+
+</body>
 </html>
