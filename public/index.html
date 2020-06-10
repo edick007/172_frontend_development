@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 .dropbtn {
-  background-color: #4CAF50;
+  background-color: #504caf;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -13,7 +13,7 @@
 }
 
 .dropbtn:hover, .dropbtn:focus {
-  background-color: #3e8e41;
+  background-color: #504caf;
 }
 
 #myInput {
@@ -30,15 +30,16 @@
 #myInput:focus {outline: 3px solid #ddd;}
 
 .dropdown {
-  position: relative;
+  position: 100px;
   display: inline-block;
+  
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f6f6f6;
-  min-width: 230px;
+  min-width: 2000px;
   overflow: auto;
   border: 1px solid #ddd;
   z-index: 1;
@@ -51,21 +52,26 @@
   display: block;
 }
 
+.groove {border-style: groove;}
+
 .dropdown a:hover {background-color: #ddd;}
 
 .show {display: block;}
+
+
 </style>
 </head>
 <body>
 
-<h2>Search/Filter Dropdown</h2>
-<p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
-<p>hHLELEO</p>
+<h2 style="text-align:center">Twitter Search/Filter</h2>
+<p style="text-align:center">Click on the button to open the search menu, and use the input field to search for a tweet.</p>
 
-<div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+<div class="dropdown" class="groove">
+  <button onclick="myFunction()" class="dropbtn" >Get Searching!</button>
+  <div id="myDropdown" class="dropdown-content" class="groove">
+    <input type="text" placeholder="Search.." class="groove" id="myInput" onkeyup="filterFunction()">
+    <button onclick="nothing()">Search</button>
+    <p id="obj0"></p>
     <p id="obj1"></p>
     <p id="obj2"></p>
     <p id="obj3"></p>
@@ -75,18 +81,21 @@
     <p id="obj7"></p>
     <p id="obj8"></p>
     <p id="obj9"></p>
-    <p id="obj10"></p>
+    
   </div>
 </div>
 
+
   <script>
-  
+  function nothing(){
+    //do nothing
+  }
   function myFunction() {
     document.getElementById("myDropdown").classList.toggle("show");
     }
 
     function filterFunction() {
-      var input, filter, ul, li, a, i;
+      var input, filter, a; //ul, li, a, i;
       input = document.getElementById("myInput");
       
       filter = input.value.toUpperCase();
@@ -96,42 +105,86 @@
       const url = 'http://192.168.1.211:8080/api/search?requestedQuery=' + filter;
       fetch(url)
         .then(response => response.json())
-        .then((out)=>{
-          console.log(out[0].name);
-      document.getElementById("obj1").innerHTML = out[0].text;
-      document.getElementById("obj2").innerHTML = out[1].text;
-      document.getElementById("obj3").innerHTML = out[2].text;
-      document.getElementById("obj4").innerHTML = out[3].text;
-      document.getElementById("obj5").innerHTML = out[4].text;
-      document.getElementById("obj6").innerHTML = out[5].text;
-      document.getElementById("obj7").innerHTML = out[6].text;
-      document.getElementById("obj8").innerHTML = out[7].text;
-      document.getElementById("obj9").innerHTML = out[8].text;
-      document.getElementById("obj10").innerHTML = out[9].text;
+        .then((data)=>{
+        
+          //console.log(data);
+          //console.log(data[0].name);
+      //var out = [];
+      var next = 1;
+      var order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+      /*
+       * Ranking fcn: Tweets are already ordered by time created in backend.
+       * Order tweets by their score in descending order.
+       */
+
+      function TwitterStringToDate(s) {
+        var b = s.split(/[: ]/g);
+        var m = {jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6,
+                aug:7, sep:8, oct:9, nov:10, dec:11};
+
+        return new Date(Date.UTC(b[7], m[b[1].toLowerCase()], b[2], b[3], b[4], b[5]));
+      }
+      
+      //var temp_order  = order;
+      var temp_data = data;
+      for(var j = 0; j < 10; j++){
+        for(var i = 0; i < 9-j; i++){
+          var temp_data_original;
+          //console.log("before");
+          if(temp_data[i].score <= temp_data[i+1].score){
+            //console.log("after");
+            if (TwitterStringToDate(temp_data[i].created_at) <TwitterStringToDate(temp_data[i+1].created_at)){
+              //console.log("SWAP");
+              
+              temp_data_original = temp_data[i]
+              temp_data[i] = temp_data[i+1]
+              temp_data[i+1] = temp_data_original
+              
+
+              //temp_order = order[i];
+              //order[i] = order[i+1];
+              //order[i+1] = temp_order;
+            }
+          }
+        }
+      }
+      
+      //console.log(order);
+      //console.log(temp_data);
+      console.log('filter: ' + filter)
+      if (filter == null){
+        for (var i = 0; i <= 9; i++) {
+          //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
+          document.getElementById("obj" + String(i)).innerHTML = "loading..";
+          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+        }
+      }
+      else{
+        for (var i = 0; i <= 9; i++) {
+          //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
+          document.getElementById("obj" + String(i)).innerHTML = "Score: " + data[i].score + ", Content: " + data[i].text;
+          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+        }
+      }
+      console.log('after')
+      console.log(data);
+      //console.log(order);
 
     })
+    .catch((error) => {
+          //console.error('Error:', error);
+          for (var i = 0; i <= 9; i++) {
+          //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
+          document.getElementById("obj" + String(i)).innerHTML = "No result..";
+          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+        }
 
+    });
       
     }
-
-  //cosnt proxyurl = "https://cors-anywhere.herokuapp.com/";
-  /*
-  var query = 'hello_sir'
-  const url = 'http://192.168.1.211:8080/api/search?requestedQuery=' + query;
-  fetch(url)
-    .then(response => response.json())
-    .then((out)=>{
-      console.log(out);
-    })
-      
-    */
-
-  //  import React from "React";
-    //await fetch("http://localhost:8080/api/search?requestedQuery=hello_sir", {mode: 'no-cors'})
 
   </script>
 
 </body>
 </html>
-
-
