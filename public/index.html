@@ -61,19 +61,70 @@
 <h2>Search/Filter Dropdown</h2>
 <p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
 <p>hHLELEO</p>
+
+<div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+  <div id="myDropdown" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <p id="obj1"></p>
+    <p id="obj2"></p>
+    <p id="obj3"></p>
+    <p id="obj4"></p>
+    <p id="obj5"></p>
+    <p id="obj6"></p>
+    <p id="obj7"></p>
+    <p id="obj8"></p>
+    <p id="obj9"></p>
+    <p id="obj10"></p>
+  </div>
 </div>
-  <img src="" id="rainbow" />
+
   <script>
+  
+  function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function filterFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("myInput");
+      
+      filter = input.value.toUpperCase();
+      console.log(filter)
+      div = document.getElementById("myDropdown");
+      a = div.getElementsByTagName("a");
+      const url = 'http://192.168.1.211:8080/api/search?requestedQuery=' + filter;
+      fetch(url)
+        .then(response => response.json())
+        .then((out)=>{
+          console.log(out[0].name);
+      document.getElementById("obj1").innerHTML = out[0].text;
+      document.getElementById("obj2").innerHTML = out[1].text;
+      document.getElementById("obj3").innerHTML = out[2].text;
+      document.getElementById("obj4").innerHTML = out[3].text;
+      document.getElementById("obj5").innerHTML = out[4].text;
+      document.getElementById("obj6").innerHTML = out[5].text;
+      document.getElementById("obj7").innerHTML = out[6].text;
+      document.getElementById("obj8").innerHTML = out[7].text;
+      document.getElementById("obj9").innerHTML = out[8].text;
+      document.getElementById("obj10").innerHTML = out[9].text;
+
+    })
+
+      
+    }
 
   //cosnt proxyurl = "https://cors-anywhere.herokuapp.com/";
-  const url = 'http://192.168.1.211:8080/api/search?requestedQuery=hello_sir';
+  /*
+  var query = 'hello_sir'
+  const url = 'http://192.168.1.211:8080/api/search?requestedQuery=' + query;
   fetch(url)
     .then(response => response.json())
     .then((out)=>{
       console.log(out);
     })
       
-      
+    */
 
   //  import React from "React";
     //await fetch("http://localhost:8080/api/search?requestedQuery=hello_sir", {mode: 'no-cors'})
