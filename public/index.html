@@ -163,8 +163,13 @@
       else{
         for (var i = 0; i <= 9; i++) {
           //var order = [9, 1, 2, 3, 4, 5, 6, 7, 8, 0];
-          document.getElementById("obj" + String(i)).innerHTML = "Score: " + data[i].score + ", Content: " + data[i].text;
-          //document.getElementById("obj" + String(i)).innerHTML = data[order[i]].score;
+          if (data[i].geo == "null"){
+            document.getElementById("obj" + String(i)).innerHTML = "Geotag: none, Score: " + data[i].score + ", User: " + data[i].name + ", Content: " + data[i].text;
+          }
+          else{
+            document.getElementById("obj" + String(i)).innerHTML = "Geotag: " + data[i].geo + ", Score: " + data[i].score + ", User: " + data[i].name + ", Content: " + data[i].text;
+          }
+          
         }
       }
       console.log('after')
